@@ -29,6 +29,8 @@ public class GUI extends JFrame {
 	private static final int panelWidth = 400;
 	private static final int panelHeight = 400;
 	private static final Color panelBgColor = Color.BLACK;
+	private static final int blockSize = 100;
+	private static final Font mainFont = new Font("Tahoma", Font.BOLD, 25);
 
 	//----------------------------------------------
 	// variables
@@ -58,20 +60,20 @@ public class GUI extends JFrame {
 	//----------------------------------------------
 	public GUI() {
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		setTitle("2048");
 		setLocation(0,0);
 		setSize(surfaceWidth, surfaceHeight);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		surface = new JPanel();
-		surface.setBackground(Color.GREEN);
+		surface.setBackground(surfaceBgColor);
 		surface.setLayout(null);
 		setContentPane(surface);
 		
 		panel = new JPanel();
-		panel.setBackground(Color.BLACK);
-		panel.setLocation(0,0);
-		panel.setSize(400,400);
+		panel.setBackground(panelBgColor);
+		panel.setLocation((surfaceWidth - panelWidth) / 2, 100);
+		panel.setSize(panelWidth, panelHeight);
 		panel.setLayout(null);
 		surface.add(panel);
 		
@@ -79,8 +81,9 @@ public class GUI extends JFrame {
 		block01.setHorizontalTextPosition(SwingConstants.CENTER);
 		block01.setHorizontalAlignment(SwingConstants.CENTER);
 		block01.setAlignmentX(Component.CENTER_ALIGNMENT);
-		block01.setBounds(0, 0, 100, 100);
-		block01.setFont(new Font("Tahoma", Font.BOLD, 25));
+		block01.setLocation(0,0);
+		block01.setSize(blockSize, blockSize);
+		block01.setFont(mainFont);
 		block01.setOpaque(true);
 		panel.add(block01);
 	}
