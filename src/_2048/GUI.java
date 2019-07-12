@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.Component;
 import javax.swing.SwingConstants;
 
@@ -85,7 +87,39 @@ public class GUI extends JFrame {
 		block01.setSize(blockSize, blockSize);
 		block01.setFont(mainFont);
 		block01.setOpaque(true);
+		
 		panel.add(block01);
+		
+		Listener l = new Listener();
+		addKeyListener(l);
 	}
+	
+	//----------------------------------------------
+	// Listener class
+	//----------------------------------------------
+	public class Listener implements KeyListener {
 
+		@Override
+		public void keyPressed(KeyEvent ke) {}
+
+		@Override
+		public void keyReleased(KeyEvent ke) {
+			
+			if (ke.getKeyCode() == KeyEvent.VK_UP) {
+				System.out.println("up");
+			}
+			else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
+				System.out.println("down");
+			}
+			else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+				System.out.println("left");
+			}
+			else if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+				System.out.println("right");
+			}
+		}
+
+		@Override
+		public void keyTyped(KeyEvent ke) {}
+	}
 }
