@@ -25,14 +25,13 @@ public class GUI extends JFrame {
 	//----------------------------------------------
 	private static final long serialVersionUID = 1L;
 	private static final int surfaceWidth = 625;
-	private static final int surfaceHeight = 625;
+	private static final int surfaceHeight = 650;
 	private static final Color surfaceBgColor = Color.BLUE;
 	private static final int panelWidth = 425;
 	private static final int panelHeight = 425;
 	private static final Color panelBgColor = Color.ORANGE;
 	private static final int blockSize = 100;
-	private static final Color blockBgColor = Color.BLACK;
-	private static final Color blockColor = Color.GRAY;
+	private static final Color blockBgColor = Color.GRAY;
 	private static final Font mainFont = new Font("Tahoma", Font.BOLD, 25);
 
 	//----------------------------------------------
@@ -50,6 +49,7 @@ public class GUI extends JFrame {
 				try {
 					GUI frame = new GUI();
 					frame.setVisible(true);
+					frame.setResizable(false);
 					frame.setLocationRelativeTo(null);
 				}
 				catch (Exception e) {e.printStackTrace();}
@@ -73,39 +73,42 @@ public class GUI extends JFrame {
 		setContentPane(surface);
 		
 		panel = new JPanel();
-		panel.setLocation((surfaceWidth - panelWidth) / 2, 100);
+		panel.setLocation((surfaceWidth - panelWidth) / 2 - 2, 150);
 		panel.setSize(panelWidth, panelHeight);
 		panel.setBackground(panelBgColor);
 		panel.setLayout(null);
 		surface.add(panel);
 		
-		int blockNb = 1;
-		for (int lineNb = 1; lineNb <= 4; lineNb++) {
-			for (int columnNb = 1; columnNb <= 4; columnNb++) {
-				panel.add(drawABlock(Integer.toString(blockNb), lineNb, columnNb));
-				blockNb++;
-			}
-		}
+		drawGrid();
 		
 		Listener l = new Listener();
 		addKeyListener(l);
 	}
 	
 	//----------------------------------------------
-	// designABlock method
+	// drawGrid method
 	//----------------------------------------------
-	private static JLabel drawABlock(String blockNb, int lineNb, int columnNb) {
+	private void drawGrid() {
+		for (int lineNb = 1; lineNb <= 4; lineNb++) {
+			for (int columnNb = 1; columnNb <= 4; columnNb++) {
+				panel.add(drawABlock(lineNb, columnNb));
+			}
+		}
+	}
+	
+	//----------------------------------------------
+	// drawABlock method
+	//----------------------------------------------
+	private static JLabel drawABlock(int lineNb, int columnNb) {
 		
-		JLabel block = new JLabel(blockNb);
-		
+		JLabel block = new JLabel();
+
 		lineNb--;
 		columnNb--;
 		
 		block.setLocation(columnNb * (blockSize + 5) + 5, lineNb * (blockSize + 5) + 5);
 		block.setSize(blockSize, blockSize);
 		block.setBackground(blockBgColor);
-		block.setForeground(blockColor);
-		block.setHorizontalAlignment(SwingConstants.CENTER);
 		block.setFont(mainFont);
 		block.setOpaque(true);
 		
