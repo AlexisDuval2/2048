@@ -104,9 +104,9 @@ public class GUI extends JFrame {
 		AvailableSpaces.update(null, testBlock.location());
 		System.out.println("-----");
 		System.out.println("size of list: " + AvailableSpaces.list().size());
-		System.out.println("location: " + testBlock.location());
+		System.out.println("testBlock location: " + testBlock.location());
 		
-		testBlockImage = generateAPlayerBlock(testBlock); 
+		testBlockImage = generateAPlayerBlock(testBlock);
 		gameGrid.add(testBlockImage);
 
 		layeredPane.setLayer(gameBgGrid, 1);
@@ -220,13 +220,16 @@ public class GUI extends JFrame {
 					AvailableSpaces.update(oldLocation, testBlock.location());
 					Block b = new Block();
 					AvailableSpaces.update(null, b.location());
-
-					System.out.println("-----");
-					System.out.println("size of list: " + AvailableSpaces.list().size());
-					System.out.println("location: " + testBlock.location());
-
 					JLabel j = generateAPlayerBlock(b);
 					gameGrid.add(j);
+					
+					layeredPane.setLayer(gameBgGrid, 1);
+					layeredPane.setLayer(gameGrid, 2);
+					
+					System.out.println("-----");
+					System.out.println("size of list: " + AvailableSpaces.list().size());
+					System.out.println("testBlock location: " + testBlock.location());
+					System.out.println("newBlock location: " + b.location());
 				}
 			}
 		}
