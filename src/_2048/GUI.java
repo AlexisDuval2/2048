@@ -98,16 +98,10 @@ public class GUI extends JFrame {
 		layeredPane.add(gameGrid);
 
 		drawBgGrid();
+		
+		AvailableSpaces.initialize();
 
-		Vector<Point> list = new Vector<Point>();
-
-		for (int i = 1; i <= 4; i++) {
-			for (int j = 1; j <=4; j++) {
-				list.add(new Point(j, i));
-			}
-		}
-
-		testBlock = new Block(list);
+		testBlock = new Block(AvailableSpaces.list());
 		testBlockImage = generateAPlayerBlock(testBlock); 
 		gameGrid.add(testBlockImage);
 
@@ -206,14 +200,20 @@ public class GUI extends JFrame {
 					|| (pressedRight && canMoveRight);
 
 			if (validKey) {
+				
+				Point oldLocation = testBlock.location();
+				
 				if (pressedUp && canMoveUp) {testBlock.location().y = 1;}
 				else if (pressedDown && canMoveDown) {testBlock.location().y = 4;}
 				else if (pressedLeft && canMoveLeft) {testBlock.location().x = 1;}
 				else if (pressedRight && canMoveRight) {testBlock.location().x = 4;}
-				
-				System.out.println(aBlockHasMoved);
 
 				testBlockImage.setLocation(convertBlockLocation(testBlock.location()));
+				
+				if (aBlockHasMoved) {
+					AvailableSpaces.update(oldLocation, testBlock.location());
+					gameGrid.add(generateAPlayerBlock(new Block(AvailableSpaces.list())));
+				}
 			}
 		}
 
