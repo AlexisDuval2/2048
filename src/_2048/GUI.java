@@ -29,14 +29,14 @@ public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final Font mainFont = new Font("Tahoma", Font.BOLD, 25);
 	private static final int surfaceWidth = 625;
-	private static final int surfaceHeight = 650;
-	private static final Color surfaceBgColor = Color.WHITE;
+	private static final int surfaceHeight = 700;
+	private static final Color surfaceBgColor = Color.YELLOW;
 	private static final int gameGridWidth = 425;
 	private static final int gameGridHeight = 425;
 	private static final Color gameGridBgColor = Color.ORANGE;
 	private static final int blockSize = 100;
 	private static final Color blockBgColor = Color.GRAY;
-	private static final Color playerBlockBgColor = Color.YELLOW;
+	private static final Color playerBlockBgColor = Color.WHITE;
 
 	//----------------------------------------------
 	// variables
@@ -84,21 +84,21 @@ public class GUI extends JFrame {
 
 		gameBgGrid = new JPanel();
 		gameBgGrid.setLayout(null);
-		gameBgGrid.setLocation((surfaceWidth - gameGridWidth) / 2 - 2, 150);
+		gameBgGrid.setLocation((surfaceWidth - gameGridWidth) / 2 - 2, 200);
 		gameBgGrid.setSize(gameGridWidth, gameGridHeight);
 		gameBgGrid.setBackground(gameGridBgColor);
 		layeredPane.add(gameBgGrid);
 
 		gameGrid = new JPanel();
 		gameGrid.setLayout(null);
-		gameGrid.setLocation((surfaceWidth - gameGridWidth) / 2 - 2, 150);
+		gameGrid.setLocation((surfaceWidth - gameGridWidth) / 2 - 2, 200);
 		gameGrid.setSize(gameGridWidth, gameGridHeight);
 		gameGrid.setOpaque(false);
 		layeredPane.add(gameGrid);
 		
 		drawBgGrid();
 
-		playerBlock = new JLabel("TEST");
+		playerBlock = new JLabel("2");
 		playerBlock.setLocation(findBlockLocation(1,1));
 		playerBlock.setSize(blockSize, blockSize);
 		playerBlock.setBackground(playerBlockBgColor);
@@ -175,12 +175,17 @@ public class GUI extends JFrame {
 			boolean pressedRight = ke.getKeyCode() == KeyEvent.VK_RIGHT;
 
 			boolean validKey = pressedUp || pressedDown || pressedLeft || pressedRight;
+			
+			boolean canMoveUp = playerBlockLineNb > 1;
+			boolean canMoveDown = playerBlockLineNb < 4;
+			boolean canMoveLeft = playerBlockColumnNb > 1;
+			boolean canMoveRight = playerBlockColumnNb < 4;
 
 			if (validKey) {
-				if (pressedUp) {playerBlockLineNb--;}
-				else if (pressedDown) {playerBlockLineNb++;}
-				else if (pressedLeft) {playerBlockColumnNb--;}
-				else if (pressedRight) {playerBlockColumnNb++;}
+				if (pressedUp && canMoveUp) {playerBlockLineNb--;}
+				else if (pressedDown && canMoveDown) {playerBlockLineNb++;}
+				else if (pressedLeft && canMoveLeft) {playerBlockColumnNb--;}
+				else if (pressedRight && canMoveRight) {playerBlockColumnNb++;}
 
 				playerBlock.setLocation(findBlockLocation(playerBlockLineNb, playerBlockColumnNb));
 			}
