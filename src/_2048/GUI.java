@@ -19,7 +19,6 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Vector;
 
 import javax.swing.SwingConstants;
 
@@ -59,7 +58,7 @@ public class GUI extends JFrame {
 					GUI frame = new GUI();
 					frame.setVisible(true);
 					frame.setResizable(false);
-					frame.setLocationRelativeTo(null);
+//					frame.setLocationRelativeTo(null);
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -101,7 +100,12 @@ public class GUI extends JFrame {
 		
 		AvailableSpaces.initialize();
 
-		testBlock = new Block(AvailableSpaces.list());
+		testBlock = new Block();
+		AvailableSpaces.update(null, testBlock.location());
+		System.out.println("-----");
+		System.out.println("size of list: " + AvailableSpaces.list().size());
+		System.out.println("location: " + testBlock.location());
+		
 		testBlockImage = generateAPlayerBlock(testBlock); 
 		gameGrid.add(testBlockImage);
 
@@ -201,7 +205,9 @@ public class GUI extends JFrame {
 
 			if (validKey) {
 				
-				Point oldLocation = testBlock.location();
+				Point oldLocation = new Point();
+				oldLocation.x = testBlock.location().x;
+				oldLocation.y = testBlock.location().y;
 				
 				if (pressedUp && canMoveUp) {testBlock.location().y = 1;}
 				else if (pressedDown && canMoveDown) {testBlock.location().y = 4;}
@@ -212,7 +218,15 @@ public class GUI extends JFrame {
 				
 				if (aBlockHasMoved) {
 					AvailableSpaces.update(oldLocation, testBlock.location());
-					gameGrid.add(generateAPlayerBlock(new Block(AvailableSpaces.list())));
+					Block b = new Block();
+					AvailableSpaces.update(null, b.location());
+
+					System.out.println("-----");
+					System.out.println("size of list: " + AvailableSpaces.list().size());
+					System.out.println("location: " + testBlock.location());
+
+					JLabel j = generateAPlayerBlock(b);
+					gameGrid.add(j);
 				}
 			}
 		}

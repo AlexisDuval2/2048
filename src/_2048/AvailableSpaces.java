@@ -35,9 +35,13 @@ public class AvailableSpaces {
 	//----------------------------------------------
 	// update method
 	//----------------------------------------------
-	public static void update(Point oldLoction, Point newLocation) {
+	public static void update(Point oldLocation, Point newLocation) {
+
 		list_s.remove(newLocation);
-		list_s.add(oldLoction);
+		
+		if (oldLocation != null) {
+			list_s.add(oldLocation);
+		}
 	}
 	
 	//----------------------------------------------

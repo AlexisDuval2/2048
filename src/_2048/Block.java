@@ -9,7 +9,6 @@
 package _2048;
 
 import java.awt.Point;
-import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Block {
@@ -23,10 +22,10 @@ public class Block {
 	//----------------------------------------------
 	// Constructor
 	//----------------------------------------------
-	public Block(Vector<Point> listOfEmptySpaces) {
+	public Block() {
 		value = generateBlockValue();
-		int randomIndex = generateRandomInt(0, listOfEmptySpaces.size());
-		location = listOfEmptySpaces.get(randomIndex);
+		int randomIndex = generateRandomInt(0, AvailableSpaces.list().size());
+		location = AvailableSpaces.list().get(randomIndex);
 	}
 
 	//----------------------------------------------
