@@ -199,12 +199,19 @@ public class GUI extends JFrame {
 			boolean canMoveDown = testBlock.location().y < 4;
 			boolean canMoveLeft = testBlock.location().x > 1;
 			boolean canMoveRight = testBlock.location().x < 4;
+			
+			boolean aBlockHasMoved = (pressedUp && canMoveUp)
+					|| (pressedDown && canMoveDown)
+					|| (pressedLeft && canMoveLeft)
+					|| (pressedRight && canMoveRight);
 
 			if (validKey) {
 				if (pressedUp && canMoveUp) {testBlock.location().y = 1;}
 				else if (pressedDown && canMoveDown) {testBlock.location().y = 4;}
 				else if (pressedLeft && canMoveLeft) {testBlock.location().x = 1;}
 				else if (pressedRight && canMoveRight) {testBlock.location().x = 4;}
+				
+				System.out.println(aBlockHasMoved);
 
 				testBlockImage.setLocation(convertBlockLocation(testBlock.location()));
 			}
