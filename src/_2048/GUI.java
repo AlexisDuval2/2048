@@ -30,20 +30,20 @@ public class GUI extends JFrame {
 	private static final Font mainFont = new Font("Tahoma", Font.BOLD, 25);
 	private static final int surfaceWidth = 625;
 	private static final int surfaceHeight = 650;
-	private static final Color surfaceBgColor = Color.BLUE;
-	private static final int panelWidth = 425;
-	private static final int panelHeight = 425;
-	private static final Color panelBgColor = Color.ORANGE;
+	private static final Color surfaceBgColor = Color.WHITE;
+	private static final int gameGridWidth = 425;
+	private static final int gameGridHeight = 425;
+	private static final Color gameGridBgColor = Color.ORANGE;
 	private static final int blockSize = 100;
 	private static final Color blockBgColor = Color.GRAY;
-	private static final Color playerBlockBgColor = Color.RED;
-	private static final Color playerBlockColor = Color.WHITE;
+	private static final Color playerBlockBgColor = Color.YELLOW;
 
 	//----------------------------------------------
 	// variables
 	//----------------------------------------------
-	private JPanel surface;
-	private JPanel panel;
+	private JLayeredPane layeredPane;
+	private JPanel gameBgGrid;
+	private JPanel gameGrid;
 	private JLabel playerBlock;
 	private int playerBlockLineNb = 1;
 	private int playerBlockColumnNb = 1;
@@ -60,7 +60,9 @@ public class GUI extends JFrame {
 					frame.setResizable(false);
 					frame.setLocationRelativeTo(null);
 				}
-				catch (Exception e) {e.printStackTrace();}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -70,51 +72,56 @@ public class GUI extends JFrame {
 	//----------------------------------------------
 	public GUI() {
 
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("2048");
 		setLocation(0,0);
 		setSize(surfaceWidth, surfaceHeight);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBackground(surfaceBgColor);
 
-		surface = new JPanel();
-		surface.setBackground(surfaceBgColor);
-		surface.setLayout(null);
-		setContentPane(surface);
+		layeredPane = new JLayeredPane();
+		layeredPane.setLayout(null);
+		setContentPane(layeredPane);
 
-		panel = new JPanel();
-		panel.setLocation((surfaceWidth - panelWidth) / 2 - 2, 150);
-		panel.setSize(panelWidth, panelHeight);
-		panel.setBackground(panelBgColor);
-		panel.setLayout(null);
-		surface.add(panel);
+		gameBgGrid = new JPanel();
+		gameBgGrid.setLayout(null);
+		gameBgGrid.setLocation((surfaceWidth - gameGridWidth) / 2 - 2, 150);
+		gameBgGrid.setSize(gameGridWidth, gameGridHeight);
+		gameBgGrid.setBackground(gameGridBgColor);
+		layeredPane.add(gameBgGrid);
 
-		// note: the "top" element (equivalent of highest z-index) is the
-		// one that appears first in the code! The player block must appear
-		// before the background block in the code or else it will not be
-		// visible...
+		gameGrid = new JPanel();
+		gameGrid.setLayout(null);
+		gameGrid.setLocation((surfaceWidth - gameGridWidth) / 2 - 2, 150);
+		gameGrid.setSize(gameGridWidth, gameGridHeight);
+		gameGrid.setOpaque(false);
+		layeredPane.add(gameGrid);
+		
+		drawBgGrid();
+
 		playerBlock = new JLabel("TEST");
 		playerBlock.setLocation(findBlockLocation(1,1));
 		playerBlock.setSize(blockSize, blockSize);
 		playerBlock.setBackground(playerBlockBgColor);
-		playerBlock.setForeground(playerBlockColor);
 		playerBlock.setFont(mainFont);
 		playerBlock.setHorizontalAlignment(SwingConstants.CENTER);
 		playerBlock.setOpaque(true);
-		panel.add(playerBlock);
+		gameGrid.add(playerBlock);
 		
-//		drawGrid();
-
+		layeredPane.setLayer(gameBgGrid, 1);
+		layeredPane.setLayer(gameGrid, 2);
+		
 		Listener l = new Listener();
 		addKeyListener(l);
 	}
 
 	//----------------------------------------------
-	// drawGrid method
+	// drawBgGrid method
 	//----------------------------------------------
-	private void drawGrid() {
+	private void drawBgGrid() {
 		
 		for (int lineNb = 1; lineNb <= 4; lineNb++) {
 			for (int columnNb = 1; columnNb <= 4; columnNb++) {
-				panel.add(drawABlock(lineNb, columnNb));
+				gameBgGrid.add(drawABlock(lineNb, columnNb));
 			}
 		}
 	}
@@ -176,10 +183,6 @@ public class GUI extends JFrame {
 				else if (pressedRight) {playerBlockColumnNb++;}
 
 				playerBlock.setLocation(findBlockLocation(playerBlockLineNb, playerBlockColumnNb));
-
-				System.out.println("-----");
-				System.out.println(playerBlock.getX());
-				System.out.println(playerBlock.getY());
 			}
 		}
 
