@@ -44,9 +44,14 @@ public class GUI extends JFrame {
 	private JLayeredPane layeredPane;
 	private JPanel gameBgGrid;
 	private JPanel gameGrid;
-	private JLabel playerBlock;
-	private int playerBlockLineNb = 1;
-	private int playerBlockColumnNb = 1;
+
+	private JLabel playerBlock1;
+	private int playerBlock1LineNb = 1;
+	private int playerBlock1ColumnNb = 1;
+
+	private JLabel playerBlock2;
+	private int playerBlock2LineNb = 1;
+	private int playerBlock2ColumnNb = 2;
 
 	//----------------------------------------------
 	// main
@@ -98,14 +103,23 @@ public class GUI extends JFrame {
 		
 		drawBgGrid();
 
-		playerBlock = new JLabel("2");
-		playerBlock.setLocation(findBlockLocation(1,1));
-		playerBlock.setSize(blockSize, blockSize);
-		playerBlock.setBackground(playerBlockBgColor);
-		playerBlock.setFont(mainFont);
-		playerBlock.setHorizontalAlignment(SwingConstants.CENTER);
-		playerBlock.setOpaque(true);
-		gameGrid.add(playerBlock);
+		playerBlock1 = new JLabel("2");
+		playerBlock1.setLocation(findBlockLocation(playerBlock1LineNb, playerBlock1ColumnNb));
+		playerBlock1.setSize(blockSize, blockSize);
+		playerBlock1.setBackground(playerBlockBgColor);
+		playerBlock1.setFont(mainFont);
+		playerBlock1.setHorizontalAlignment(SwingConstants.CENTER);
+		playerBlock1.setOpaque(true);
+		gameGrid.add(playerBlock1);
+
+		playerBlock2 = new JLabel("2");
+		playerBlock2.setLocation(findBlockLocation(playerBlock2LineNb, playerBlock2ColumnNb));
+		playerBlock2.setSize(blockSize, blockSize);
+		playerBlock2.setBackground(playerBlockBgColor);
+		playerBlock2.setFont(mainFont);
+		playerBlock2.setHorizontalAlignment(SwingConstants.CENTER);
+		playerBlock2.setOpaque(true);
+		gameGrid.add(playerBlock2);
 		
 		layeredPane.setLayer(gameBgGrid, 1);
 		layeredPane.setLayer(gameGrid, 2);
@@ -176,18 +190,18 @@ public class GUI extends JFrame {
 
 			boolean validKey = pressedUp || pressedDown || pressedLeft || pressedRight;
 			
-			boolean canMoveUp = playerBlockLineNb > 1;
-			boolean canMoveDown = playerBlockLineNb < 4;
-			boolean canMoveLeft = playerBlockColumnNb > 1;
-			boolean canMoveRight = playerBlockColumnNb < 4;
+			boolean canMoveUp = playerBlock1LineNb > 1;
+			boolean canMoveDown = playerBlock1LineNb < 4;
+			boolean canMoveLeft = playerBlock1ColumnNb > 1;
+			boolean canMoveRight = playerBlock1ColumnNb < 4;
 
 			if (validKey) {
-				if (pressedUp && canMoveUp) {playerBlockLineNb--;}
-				else if (pressedDown && canMoveDown) {playerBlockLineNb++;}
-				else if (pressedLeft && canMoveLeft) {playerBlockColumnNb--;}
-				else if (pressedRight && canMoveRight) {playerBlockColumnNb++;}
+				if (pressedUp && canMoveUp) {playerBlock1LineNb = 1;}
+				else if (pressedDown && canMoveDown) {playerBlock1LineNb = 4;}
+				else if (pressedLeft && canMoveLeft) {playerBlock1ColumnNb = 1;}
+				else if (pressedRight && canMoveRight) {playerBlock1ColumnNb = 4;}
 
-				playerBlock.setLocation(findBlockLocation(playerBlockLineNb, playerBlockColumnNb));
+				playerBlock1.setLocation(findBlockLocation(playerBlock1LineNb, playerBlock1ColumnNb));
 			}
 		}
 
