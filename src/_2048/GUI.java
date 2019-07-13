@@ -13,7 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.SwingConstants;
@@ -24,6 +27,7 @@ public class GUI extends JFrame {
 	// constants
 	//----------------------------------------------
 	private static final long serialVersionUID = 1L;
+	private static final Font mainFont = new Font("Tahoma", Font.BOLD, 25);
 	private static final int surfaceWidth = 625;
 	private static final int surfaceHeight = 650;
 	private static final Color surfaceBgColor = Color.BLUE;
@@ -32,13 +36,17 @@ public class GUI extends JFrame {
 	private static final Color panelBgColor = Color.ORANGE;
 	private static final int blockSize = 100;
 	private static final Color blockBgColor = Color.GRAY;
-	private static final Font mainFont = new Font("Tahoma", Font.BOLD, 25);
+	private static final Color playerBlockBgColor = Color.RED;
+	private static final Color playerBlockColor = Color.WHITE;
 
 	//----------------------------------------------
 	// variables
 	//----------------------------------------------
 	private JPanel surface;
 	private JPanel panel;
+	private JLabel playerBlock;
+	private int playerBlockLineNb = 1;
+	private int playerBlockColumnNb = 1;
 
 	//----------------------------------------------
 	// main
@@ -71,50 +79,78 @@ public class GUI extends JFrame {
 		surface.setBackground(surfaceBgColor);
 		surface.setLayout(null);
 		setContentPane(surface);
-		
+
 		panel = new JPanel();
 		panel.setLocation((surfaceWidth - panelWidth) / 2 - 2, 150);
 		panel.setSize(panelWidth, panelHeight);
 		panel.setBackground(panelBgColor);
 		panel.setLayout(null);
 		surface.add(panel);
+
+		// note: the "top" element (equivalent of highest z-index) is the
+		// one that appears first in the code! The player block must appear
+		// before the background block in the code or else it will not be
+		// visible...
+		playerBlock = new JLabel("TEST");
+		playerBlock.setLocation(findBlockLocation(1,1));
+		playerBlock.setSize(blockSize, blockSize);
+		playerBlock.setBackground(playerBlockBgColor);
+		playerBlock.setForeground(playerBlockColor);
+		playerBlock.setFont(mainFont);
+		playerBlock.setHorizontalAlignment(SwingConstants.CENTER);
+		playerBlock.setOpaque(true);
+		panel.add(playerBlock);
 		
-		drawGrid();
-		
+//		drawGrid();
+
 		Listener l = new Listener();
 		addKeyListener(l);
 	}
-	
+
 	//----------------------------------------------
 	// drawGrid method
 	//----------------------------------------------
 	private void drawGrid() {
+		
 		for (int lineNb = 1; lineNb <= 4; lineNb++) {
 			for (int columnNb = 1; columnNb <= 4; columnNb++) {
 				panel.add(drawABlock(lineNb, columnNb));
 			}
 		}
 	}
-	
+
 	//----------------------------------------------
 	// drawABlock method
 	//----------------------------------------------
-	private static JLabel drawABlock(int lineNb, int columnNb) {
-		
+	private JLabel drawABlock(int lineNb, int columnNb) {
+
 		JLabel block = new JLabel();
 
-		lineNb--;
-		columnNb--;
-		
-		block.setLocation(columnNb * (blockSize + 5) + 5, lineNb * (blockSize + 5) + 5);
+		block.setLocation(findBlockLocation(lineNb, columnNb));
 		block.setSize(blockSize, blockSize);
 		block.setBackground(blockBgColor);
 		block.setFont(mainFont);
 		block.setOpaque(true);
-		
+
 		return block;
 	}
-	
+
+	//----------------------------------------------
+	// findBlockLocation method
+	//----------------------------------------------
+	private Point findBlockLocation(int lineNb, int columnNb) {
+
+		Point point = new Point();
+
+		lineNb--;
+		columnNb--;
+		int y = lineNb * (blockSize + 5) + 5;
+		int x = columnNb * (blockSize + 5) + 5;
+		point.setLocation(x, y);
+
+		return point;
+	}
+
 	//----------------------------------------------
 	// Listener class
 	//----------------------------------------------
@@ -125,18 +161,25 @@ public class GUI extends JFrame {
 
 		@Override
 		public void keyReleased(KeyEvent ke) {
-			
-			if (ke.getKeyCode() == KeyEvent.VK_UP) {
-				System.out.println("up");
-			}
-			else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
-				System.out.println("down");
-			}
-			else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
-				System.out.println("left");
-			}
-			else if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
-				System.out.println("right");
+
+			boolean pressedUp = ke.getKeyCode() == KeyEvent.VK_UP;
+			boolean pressedDown = ke.getKeyCode() == KeyEvent.VK_DOWN;
+			boolean pressedLeft = ke.getKeyCode() == KeyEvent.VK_LEFT;
+			boolean pressedRight = ke.getKeyCode() == KeyEvent.VK_RIGHT;
+
+			boolean validKey = pressedUp || pressedDown || pressedLeft || pressedRight;
+
+			if (validKey) {
+				if (pressedUp) {playerBlockLineNb--;}
+				else if (pressedDown) {playerBlockLineNb++;}
+				else if (pressedLeft) {playerBlockColumnNb--;}
+				else if (pressedRight) {playerBlockColumnNb++;}
+
+				playerBlock.setLocation(findBlockLocation(playerBlockLineNb, playerBlockColumnNb));
+
+				System.out.println("-----");
+				System.out.println(playerBlock.getX());
+				System.out.println(playerBlock.getY());
 			}
 		}
 
