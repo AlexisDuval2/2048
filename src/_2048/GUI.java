@@ -19,6 +19,8 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Vector;
+
 import javax.swing.SwingConstants;
 
 public class GUI extends JFrame {
@@ -41,17 +43,11 @@ public class GUI extends JFrame {
 	//----------------------------------------------
 	// variables
 	//----------------------------------------------
-	private JLayeredPane layeredPane;
-	private JPanel gameBgGrid;
-	private JPanel gameGrid;
-
-	private JLabel playerBlock1;
-	private int playerBlock1LineNb = 1;
-	private int playerBlock1ColumnNb = 1;
-
-	private JLabel playerBlock2;
-	private int playerBlock2LineNb = 1;
-	private int playerBlock2ColumnNb = 2;
+	private static JLayeredPane layeredPane;
+	private static JPanel gameBgGrid;
+	private static JPanel gameGrid;
+	private static JLabel testBlockImage;
+	private static Block testBlock;
 
 	//----------------------------------------------
 	// main
@@ -100,30 +96,24 @@ public class GUI extends JFrame {
 		gameGrid.setSize(gameGridWidth, gameGridHeight);
 		gameGrid.setOpaque(false);
 		layeredPane.add(gameGrid);
-		
+
 		drawBgGrid();
 
-		playerBlock1 = new JLabel("2");
-		playerBlock1.setLocation(findBlockLocation(playerBlock1LineNb, playerBlock1ColumnNb));
-		playerBlock1.setSize(blockSize, blockSize);
-		playerBlock1.setBackground(playerBlockBgColor);
-		playerBlock1.setFont(mainFont);
-		playerBlock1.setHorizontalAlignment(SwingConstants.CENTER);
-		playerBlock1.setOpaque(true);
-		gameGrid.add(playerBlock1);
+		Vector<Point> list = new Vector<Point>();
 
-		playerBlock2 = new JLabel("2");
-		playerBlock2.setLocation(findBlockLocation(playerBlock2LineNb, playerBlock2ColumnNb));
-		playerBlock2.setSize(blockSize, blockSize);
-		playerBlock2.setBackground(playerBlockBgColor);
-		playerBlock2.setFont(mainFont);
-		playerBlock2.setHorizontalAlignment(SwingConstants.CENTER);
-		playerBlock2.setOpaque(true);
-		gameGrid.add(playerBlock2);
-		
+		for (int i = 1; i <= 4; i++) {
+			for (int j = 1; j <=4; j++) {
+				list.add(new Point(j, i));
+			}
+		}
+
+		testBlock = new Block(list);
+		testBlockImage = generateAPlayerBlock(testBlock); 
+		gameGrid.add(testBlockImage);
+
 		layeredPane.setLayer(gameBgGrid, 1);
 		layeredPane.setLayer(gameGrid, 2);
-		
+
 		Listener l = new Listener();
 		addKeyListener(l);
 	}
@@ -131,45 +121,60 @@ public class GUI extends JFrame {
 	//----------------------------------------------
 	// drawBgGrid method
 	//----------------------------------------------
-	private void drawBgGrid() {
-		
+	private static void drawBgGrid() {
 		for (int lineNb = 1; lineNb <= 4; lineNb++) {
 			for (int columnNb = 1; columnNb <= 4; columnNb++) {
-				gameBgGrid.add(drawABlock(lineNb, columnNb));
+				gameBgGrid.add(generateABgBlock(columnNb, lineNb));
 			}
 		}
 	}
 
 	//----------------------------------------------
-	// drawABlock method
+	// generateABgBlock method
 	//----------------------------------------------
-	private JLabel drawABlock(int lineNb, int columnNb) {
+	private static JLabel generateABgBlock(int columnNb, int lineNb) {
 
-		JLabel block = new JLabel();
+		JLabel result = new JLabel();
 
-		block.setLocation(findBlockLocation(lineNb, columnNb));
-		block.setSize(blockSize, blockSize);
-		block.setBackground(blockBgColor);
-		block.setFont(mainFont);
-		block.setOpaque(true);
+		result.setLocation(convertBlockLocation(new Point(columnNb, lineNb)));
+		result.setSize(blockSize, blockSize);
+		result.setBackground(blockBgColor);
+		result.setFont(mainFont);
+		result.setOpaque(true);
 
-		return block;
+		return result;
 	}
 
 	//----------------------------------------------
-	// findBlockLocation method
+	// convertBlockLocation method
 	//----------------------------------------------
-	private Point findBlockLocation(int lineNb, int columnNb) {
+	private static Point convertBlockLocation(Point blockLocation) {
 
-		Point point = new Point();
+		Point visualLocation = new Point();
 
-		lineNb--;
-		columnNb--;
-		int y = lineNb * (blockSize + 5) + 5;
-		int x = columnNb * (blockSize + 5) + 5;
-		point.setLocation(x, y);
+		int x = (blockLocation.x - 1) * (blockSize + 5) + 5;
+		int y = (blockLocation.y - 1) * (blockSize + 5) + 5;
+		visualLocation.setLocation(x, y);
 
-		return point;
+		return visualLocation;
+	}
+
+	//----------------------------------------------
+	// generateAPlayerBlock method
+	//----------------------------------------------
+	private static JLabel generateAPlayerBlock(Block block) {
+
+		JLabel result = new JLabel();
+
+		result.setLocation(convertBlockLocation(block.location()));
+		result.setSize(blockSize, blockSize);
+		result.setBackground(playerBlockBgColor);
+		result.setFont(mainFont);
+		result.setHorizontalAlignment(SwingConstants.CENTER);
+		result.setText(String.valueOf(block.value()));
+		result.setOpaque(true);
+
+		return result;
 	}
 
 	//----------------------------------------------
@@ -189,19 +194,19 @@ public class GUI extends JFrame {
 			boolean pressedRight = ke.getKeyCode() == KeyEvent.VK_RIGHT;
 
 			boolean validKey = pressedUp || pressedDown || pressedLeft || pressedRight;
-			
-			boolean canMoveUp = playerBlock1LineNb > 1;
-			boolean canMoveDown = playerBlock1LineNb < 4;
-			boolean canMoveLeft = playerBlock1ColumnNb > 1;
-			boolean canMoveRight = playerBlock1ColumnNb < 4;
+
+			boolean canMoveUp = testBlock.location().y > 1;
+			boolean canMoveDown = testBlock.location().y < 4;
+			boolean canMoveLeft = testBlock.location().x > 1;
+			boolean canMoveRight = testBlock.location().x < 4;
 
 			if (validKey) {
-				if (pressedUp && canMoveUp) {playerBlock1LineNb = 1;}
-				else if (pressedDown && canMoveDown) {playerBlock1LineNb = 4;}
-				else if (pressedLeft && canMoveLeft) {playerBlock1ColumnNb = 1;}
-				else if (pressedRight && canMoveRight) {playerBlock1ColumnNb = 4;}
+				if (pressedUp && canMoveUp) {testBlock.location().y = 1;}
+				else if (pressedDown && canMoveDown) {testBlock.location().y = 4;}
+				else if (pressedLeft && canMoveLeft) {testBlock.location().x = 1;}
+				else if (pressedRight && canMoveRight) {testBlock.location().x = 4;}
 
-				playerBlock1.setLocation(findBlockLocation(playerBlock1LineNb, playerBlock1ColumnNb));
+				testBlockImage.setLocation(convertBlockLocation(testBlock.location()));
 			}
 		}
 
