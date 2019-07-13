@@ -26,6 +26,7 @@ public class Block {
 		value = generateBlockValue();
 		int randomIndex = generateRandomInt(0, AvailableSpaces.list().size());
 		location = AvailableSpaces.list().get(randomIndex);
+		AvailableSpaces.update(null, location);
 	}
 
 	//----------------------------------------------
